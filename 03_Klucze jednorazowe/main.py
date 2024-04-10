@@ -1,6 +1,17 @@
 from Kryptoanaliza import Kryptoanaliza
-
-
+# TODO:
+#  a)
+#  przy użyciu operacji XOR. W tej części zadania należy samodzielnie przygotować zestaw danych testowych i przedstawić je prowadzącemu.
+#  b)
+#  Zintegruj z programem funkcjonalność mierzenia czasu potrzebnego na kryptoanalizę w zależności od długości klucza.
+#  Przeprowadź eksperyment, w którym będziesz sukcesywnie zwiększać długość klucza, notując odpowiadający mu czas kryptoanalizy.
+#  Wyniki eksperymentu przedstaw w formie wykresu.
+#  c)
+#  ramach eksperymentu z punktu b, przeprowadź analizę dla dwóch typów kluczy: kluczy składających się ze słów oraz kluczy utworzonych z losowych ciągów znaków.
+#  Porównaj wyniki i zinterpretuj, jak różne typy kluczy wpływają na czas kryptoanalizy.
+#  d)
+#  Implementuj funkcję oceny skuteczności kryptoanalizy, która będzie porównywać odszyfrowany tekst z oryginałem, wyrażając zgodność w procentach.
+#  Funkcja ta pozwoli ocenić, jak efektywna jest kryptoanaliza w zależności od użytego klucza i metody szyfrowania.
 def xor(a, b):
     return a ^ b
 

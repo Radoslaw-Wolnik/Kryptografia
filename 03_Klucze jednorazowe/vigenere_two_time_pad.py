@@ -119,64 +119,6 @@ def interface(text, lenght):
 
     return result_key
 
-
-def interface_xor(text, lenght):
-    AZ = [chr(ord("A") + i) for i in range(26)]
-    letters = [letter.upper() for letter in text if isAZaz(letter)]
-    result_key = ["None", 0]
-    key_len = lenght
-    # generate list of lists where every list coresponds to possible solution to number % key_len
-    sample = [[] for _ in range(key_len)]
-    possible_letters = []
-    for i in range(len(letters)):
-        sample[i%key_len].append(letters[i])
-    for i in range(len(sample)):
-        # score = {letter : score}
-        score = {k : 0 for k in AZ}
-        for letter in AZ:
-            # for every samlpe we try every letter as a key
-            # and we check what are the highest scorring letters
-            # 1st step decipher sample through letter
-            decoded_sample = decode_vigenere("".join(sample[i]), letter) # change here for xor ------------------------------
-            # 2nd step - score
-            scored_number = rozklad_czestotliwosci_liter(decoded_sample)
-            score[letter] = scored_number
-        # find max score
-        max_score = max(score.values())
-        # add to possible letters all that scored same as max
-        temp = [k for k, v in score.items() if v == max_score]
-        possible_letters.append(temp)
-    #< print(possible_letters)
-    # change possible_letters to words
-    res= [[letter] for letter in possible_letters[0]]
-    #< print(res)
-    for i in range(1, len(possible_letters)):
-        temp = []
-        for j in range(len(possible_letters[i])):
-            for r in range(len(res)):
-                temp.append(res[r] + [possible_letters[i][j]])
-        res = temp
-    words = []
-    for i in range(len(res)):
-        words.append("".join(res[i]))
-    # and testing
-    #< print(words)
-    key_score = {k : 0 for k in words}
-    for word_key in words:
-        decipherd_text = decode_vigenere(text, word_key) # change here for xor ------------------------------
-        decipherd_text = decipherd_text.upper()
-        decipherd_text = "".join([letter for letter in decipherd_text if isAZaz(letter) or letter == " "])
-
-        score_deciphered = rozklad_czestotliwosci_liter(decipherd_text)
-        # score_deciphered max 12 min 0
-        performance = int((score_deciphered / 12) * 100)
-
-        if performance > result_key[1]:
-            result_key[0] = word_key
-            result_key[1] = performance
-
-    return result_key
-
 # interface("")
 ans1 = "Im trying to guess the secret key to decrypt a message using Python I know the messages is going toy being something"
 cod1 = "Bt teigba ac cwefa twt dcvyii kvr ps nrqnrdw i rjwjetx jszgy Ddmosp G zusn bze btjgaila af uhnbu edp psnry hsomtstlo"

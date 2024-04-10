@@ -62,119 +62,83 @@ def decode_vigenere(text, K):
     return "".join(res)
 
 
-def interface(text, lenght):
-    AZ = [chr(ord("A") + i) for i in range(26)]
-    letters = [letter.upper() for letter in text if isAZaz(letter)]
+def interface_xor(self, text, length):
+    # important!
+    # in this case we change text to decimal and instead text we always use a list of decimal numbers
+    # remember tihis is chnaged version of interface_veginere to accomodate xor
+    all = [i for i in range(256)]  # here we can change all characters that we consider that can be used as a key
+    # letters = [letter.upper() for letter in text if self.isAZaz(letter)]
+    characters = self.text_to_deci(text)
     result_key = ["None", 0]
-    key_len = lenght
-    # generate list of lists where every list coresponds to possible solution to number % key_len
+    multiple = []  # in case multiple word_key have a score of 100
+    key_len = length
+    # generate list of lists where every list corresponds to possible solution to number % key_len
     sample = [[] for _ in range(key_len)]
     possible_letters = []
-    for i in range(len(letters)):
-        sample[i%key_len].append(letters[i])
+    for i in range(len(characters)):
+        sample[i % key_len].append(characters[i])
     for i in range(len(sample)):
         # score = {letter : score}
-        score = {k : 0 for k in AZ}
-        for letter in AZ:
-            # for every samlpe we try every letter as a key
-            # and we check what are the highest scorring letters
+        score = {k: 0 for k in all}
+        for character in all:
+            # for every sample we try every character as a key
+            # and we check what are the highest scoring chcaracters
             # 1st step decipher sample through letter
-            decoded_sample = decode_vigenere("".join(sample[i]), letter)
+            xored_sample = self.xor_two_decimal_lists(sample[i], [character for _ in range(len(sample[i]))])
             # 2nd step - score
-            scored_number = rozklad_czestotliwosci_liter(decoded_sample)
-            score[letter] = scored_number
+            # < print(xored_sample)
+            decoded_sample = self.decimal_to_str(xored_sample)
+            # < print(decoded_sample)
+            scored_number = -1
+            # check if all characters are actually readable (not hexadecimal eg. "/xd5")
+            if sum([1 if len(letter) == 1 else 0 for letter in decoded_sample]) == len(sample[i]):
+                scored_number = self.rozklad_czestotliwosci_liter("".join(decoded_sample))
+            score[character] = scored_number
         # find max score
         max_score = max(score.values())
         # add to possible letters all that scored same as max
         temp = [k for k, v in score.items() if v == max_score]
         possible_letters.append(temp)
-    #< print(possible_letters)
+    # < print(possible_letters)
     # change possible_letters to words
-    res= [[letter] for letter in possible_letters[0]]
-    #< print(res)
+    res = [[number] for number in possible_letters[0]]
+    # < print(res)
     for i in range(1, len(possible_letters)):
         temp = []
         for j in range(len(possible_letters[i])):
             for r in range(len(res)):
                 temp.append(res[r] + [possible_letters[i][j]])
         res = temp
-    words = []
+    words = []  # that will be a list of lists of decimal numbers
+    # containing all possible combinations that scored best
     for i in range(len(res)):
-        words.append("".join(res[i]))
-    # and testing
-    #< print(words)
-    key_score = {k : 0 for k in words}
+        # words.append("".join(res[i]))
+        words.append(res[i])
+    # and testing to find the best one
+    # < print(words)
+    key_score = {"".join(self.decimal_to_str(k)): 0 for k in words}
     for word_key in words:
-        decipherd_text = decode_vigenere(text, word_key)
-        decipherd_text = decipherd_text.upper()
-        decipherd_text = "".join([letter for letter in decipherd_text if isAZaz(letter) or letter == " "])
-
-        score_deciphered = rozklad_czestotliwosci_liter(decipherd_text)
-        # score_deciphered max 12 min 0
-        performance = int((score_deciphered / 12) * 100)
+        deciphered_text = self.xor_two_decimal_lists(characters, word_key + word_key)
+        score_deciphered = sum([self.isAZaz(chr(number)) for number in deciphered_text])
+        performance = int((score_deciphered / len(characters)) * 100)
 
         if performance > result_key[1]:
-            result_key[0] = word_key
+            result_key[0] = "".join(self.decimal_to_str(word_key))
             result_key[1] = performance
 
-    return result_key
+        if performance == 100:
+            # we could check if both of them are words using the dictionary
+            word1 = "".join([chr(number) for number in deciphered_text[:length]])
+            word2 = "".join([chr(number) for number in deciphered_text[length:]])
+            # both = "".join([ chr(number) for number in deciphered_text ])
+            # < print(word1, word2, both)
+            if word1 in self.english_dictionary or word2 in self.english_dictionary:
+                multiple.append(self.decimal_to_str(word_key))
+            # or we can do analiza_czestotliwości and return highest scoring
+            # but for that we would require longer texts
 
-
-def interface_xor(text, lenght):
-    AZ = [chr(ord("A") + i) for i in range(26)]
-    letters = [letter.upper() for letter in text if isAZaz(letter)]
-    result_key = ["None", 0]
-    key_len = lenght
-    # generate list of lists where every list coresponds to possible solution to number % key_len
-    sample = [[] for _ in range(key_len)]
-    possible_letters = []
-    for i in range(len(letters)):
-        sample[i%key_len].append(letters[i])
-    for i in range(len(sample)):
-        # score = {letter : score}
-        score = {k : 0 for k in AZ}
-        for letter in AZ:
-            # for every samlpe we try every letter as a key
-            # and we check what are the highest scorring letters
-            # 1st step decipher sample through letter
-            decoded_sample = decode_vigenere("".join(sample[i]), letter) # change here for xor ------------------------------
-            # 2nd step - score
-            scored_number = rozklad_czestotliwosci_liter(decoded_sample)
-            score[letter] = scored_number
-        # find max score
-        max_score = max(score.values())
-        # add to possible letters all that scored same as max
-        temp = [k for k, v in score.items() if v == max_score]
-        possible_letters.append(temp)
-    #< print(possible_letters)
-    # change possible_letters to words
-    res= [[letter] for letter in possible_letters[0]]
-    #< print(res)
-    for i in range(1, len(possible_letters)):
-        temp = []
-        for j in range(len(possible_letters[i])):
-            for r in range(len(res)):
-                temp.append(res[r] + [possible_letters[i][j]])
-        res = temp
-    words = []
-    for i in range(len(res)):
-        words.append("".join(res[i]))
-    # and testing
-    #< print(words)
-    key_score = {k : 0 for k in words}
-    for word_key in words:
-        decipherd_text = decode_vigenere(text, word_key) # change here for xor ------------------------------
-        decipherd_text = decipherd_text.upper()
-        decipherd_text = "".join([letter for letter in decipherd_text if isAZaz(letter) or letter == " "])
-
-        score_deciphered = rozklad_czestotliwosci_liter(decipherd_text)
-        # score_deciphered max 12 min 0
-        performance = int((score_deciphered / 12) * 100)
-
-        if performance > result_key[1]:
-            result_key[0] = word_key
-            result_key[1] = performance
-
+    if len(multiple) > 0:
+        return multiple, 100
     return result_key
 
 # interface("")
