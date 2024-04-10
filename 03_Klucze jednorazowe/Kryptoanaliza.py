@@ -16,6 +16,8 @@ def timer(func):
 
 
 class Kryptoanaliza:
+    """Uses a fact that two ciphered texts by the same key resemble a vigenere ciphered text with two repeats of used key
+    The correct way of solving it would be to use crib dragging or automation of crib dragging (via mapping all words in used language)"""
 
     def __init__(self):
         self.ciphered1 = None
