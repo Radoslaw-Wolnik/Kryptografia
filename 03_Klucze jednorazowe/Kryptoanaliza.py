@@ -73,7 +73,7 @@ class Kryptoanaliza:
         key = self.text_to_deci(key)
         res = []
         if len(text) != len(key):
-            print("diff len")
+            print("diff len xor two str text")
             print(text)
             print(key)
             return ([-8])
@@ -83,39 +83,24 @@ class Kryptoanaliza:
         return res
 
     def text_to_deci(self, text):
-        # special = {"n" : "\n",
-        #            "t" : "\t",
-        #            "'" : "\'",
-        #            '"' : "\"",
-        #            "b" : "\b",
-        #            "r" : "\r",
-        #            "f" : "\f",
-        #            "v" : "\v",
-        #            "a" : "\x07",
-        #           }
         i = 0
         result = []
+        #< print(text)
         while i < len(text):
-            if ord(text[i]) == 92:
+            #< print(text[i], i)
+            if ord(text[i]) == ord("\\"): # 92 na stepiku <--------------------------------------
+                #< print("ignoring much ", text[i], text[i+1])
+                #< print(len(text), i)
+                # if len(text) > i+i: # this is not working idk why im not sure what's wrong with this line
                 if ord(text[i + 1]) == ord("x"):
                     hexa = text[i + 2:i + 4]
                     deci = int(hexa, 16)
                     result.append(deci)
-                    # print(f"hex: {hexa}; dec: {deci}")
+                    #< print(f"hex: {hexa}; dec: {deci}")
                     i += 3
-            #         else:
-            #              # print("special: ", text[i+1])
-            #              temp = text[i+1]
-            #              if temp in special.keys():
-            #                  deci = ord(special[temp])
-            #              else:
-            #                  # print(f"special character not in specials: {temp}")
-            #                  deci = ord("\\") # tego brakuje
-            #              result.append(deci)
-            #              i+=1
             else:
                 result.append(ord(text[i]))
-                # print("normal: ", text[i])
+                #< print("normal: ", text[i])
             i += 1
             # print(ord(el))
         return result
@@ -291,13 +276,12 @@ class Kryptoanaliza:
     def xor_two_decimal_lists(self, text, key):
         res = []
         if len(text) != len(key):
-            print("diff len")
-            print(text)
-            print(key)
-            return [-8]
-        for i in range(len(text)):
-            temp = text[i] ^ key[i]
-            res.append(temp)
+            print("different length xor two list of decimal")
+            return [-12]
+        else:
+            for i in range(len(text)):
+                temp = text[i] ^ key[i]
+                res.append(temp)
         return res
 
     @timer
@@ -308,7 +292,8 @@ class Kryptoanaliza:
         # remember tihis is chnaged version of interface_veginere to accomodate xor
         all = [i for i in range(256)]  # here we can change all characters that we consider that can be used as a key
         # letters = [letter.upper() for letter in text if self.isAZaz(letter)]
-        characters = self.text_to_deci(text)
+        characters = self.text_to_deci(text) # problem here <--------------------------------------------------------------------------------------
+        print(f'entered interface xor and changed text: {text} into characters: {characters}')
         result_key = ["None", 0]
         multiple = []  # in case multiple word_key have a score of 100
         key_len = length
@@ -359,8 +344,12 @@ class Kryptoanaliza:
         key_score = {"".join(self.decimal_to_str(k)): 0 for k in words}
         for word_key in words:
             deciphered_text = self.xor_two_decimal_lists(characters, word_key + word_key)
-            score_deciphered = sum([self.isAZaz(chr(number)) for number in deciphered_text])
-            performance = int((score_deciphered / len(characters)) * 100)
+            performance = -1
+            try:
+                score_deciphered = sum([self.isAZaz(chr(number)) for number in deciphered_text])
+                performance = int((score_deciphered / len(characters)) * 100)
+            except ValueError:
+                performance = -1
 
             if performance > result_key[1]:
                 result_key[0] = "".join(self.decimal_to_str(word_key))
@@ -414,6 +403,7 @@ class Kryptoanaliza:
         return "".join(res)
 
     def mierzenie_czas_dlugosc_klucza(self, szyfrowanie="x", from_len=1, to_len=100, losowy=False):
+        print(f'{szyfrowanie}, {from_len}, {to_len}, {losowy}')
         AZ = [chr(ord("A") + i) for i in range(26)]
         listed_words = list(self.english_dictionary)
         assert self.english_dictionary != set(), "Dictionary not present"
@@ -456,7 +446,7 @@ class Kryptoanaliza:
             while len(b) < i:
                 b = b + random.choice(listed_words)
             B.append(b[:i])
-
+        print(f'created list A: {A}, B: {B}, and K: {K}')
         # ciphering A and B
         if szyfrowanie == "x":
             for i in range(len(K)):
@@ -471,15 +461,18 @@ class Kryptoanaliza:
                 cipheredA.append(self.vigenere(A[i], K[i]))
                 cipheredB.append(self.vigenere(B[i], K[i]))
 
+        print(f'cleared ciphering section, cipheredA: {cipheredA}, cipheredB: {cipheredB}')
         # solving and measuring accuracy
         if szyfrowanie == "x":
             for i in range(len(K)):
-                solved = self.interface_xor(cipheredA[i] + cipheredB[i], len(K[i]))
+                #< print(i, cipheredA[i] + cipheredB[i])
+                solved = self.interface_xor(cipheredA[i] + cipheredB[i], len(K[i])) # problem here <----
                 similarityA = 0
                 smilarityB = 0
                 if type(solved[0]) == list:
                     for key in solved[0]:
                         key = "".join(key)
+                        print(key, "key is list- new problems")
                         xoredA = self.xor_two_str(cipheredA[i], key)
                         tempA = "".join(self.decimal_to_str(xoredA))
                         simA = self.compare(tempA, A[i])
@@ -492,6 +485,7 @@ class Kryptoanaliza:
                             smilarityB = simB
                 else:
                     key = solved[0]
+                    #< print(key, "key is not list; we have a problem here", cipheredA[i], cipheredB[i])
                     xoredA = self.xor_two_str(cipheredA[i], key)
                     tempA = "".join(self.decimal_to_str(xoredA))
                     similarityA = self.compare(tempA, A[i])

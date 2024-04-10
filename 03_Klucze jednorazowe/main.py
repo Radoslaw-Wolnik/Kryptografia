@@ -1,7 +1,8 @@
 from Kryptoanaliza import Kryptoanaliza
+import matplotlib.pyplot as plt
 # TODO:
-#  a)
-#  przy użyciu operacji XOR. W tej części zadania należy samodzielnie przygotować zestaw danych testowych i przedstawić je prowadzącemu.
+#  dodaj przy użyciu operacji XOR.
+#  W tej części zadania należy samodzielnie przygotować zestaw danych testowych i przedstawić je prowadzącemu.
 
 def xor(a, b):
     return a ^ b
@@ -170,10 +171,66 @@ if __name__ == '__main__':
     print()
 
     print("Plotting")
-    temp = analise.mierzenie_czas_dlugosc_klucza("x", 1,7, False)
+    temp = analise.mierzenie_czas_dlugosc_klucza("x", 1, 7, False)
+    print(temp)
+    plt.figure()
+    plt.figure(figsize=(8, 6))
+    y = [temp[i][1] for i in range(len(temp))]
+    plt.scatter([temp[i][0] for i in range(len(temp))], [temp[i][2] for i in range(len(temp))], c=y, cmap='viridis', s=20, edgecolors='grey')
+    plt.xlabel('Długość klucza')
+    plt.ylabel('Czas')
+    cbar = plt.colorbar()
+    # Add description to colorbar
+    cbar.set_label('Accuracy in %', rotation=270, labelpad=20)
+    # Set the range of the colorbar from 0 to 100
+    plt.savefig('xor_from_1_to_7_not_random.png')
+    plt.show()
+
     temp = analise.mierzenie_czas_dlugosc_klucza("v", 1, 7, False)
+    plt.figure()
+    plt.figure(figsize=(8, 6))
+    y = [temp[i][1] for i in range(len(temp))]
+    plt.scatter([temp[i][0] for i in range(len(temp))], [temp[i][2] for i in range(len(temp))], c=y, cmap='viridis',
+                s=20, edgecolors='grey')
+    plt.xlabel('Długość klucza')
+    plt.ylabel('Czas')
+    cbar = plt.colorbar()
+    # Add description to colorbar
+    cbar.set_label('Accuracy in %', rotation=270, labelpad=20)
+    # Set the range of the colorbar from 0 to 100
+    plt.savefig('veginere_from_1_to_7_not_random.png')
+    plt.show()
+
     temp = analise.mierzenie_czas_dlugosc_klucza("x", 1, 7, True)
+    plt.figure()
+    plt.figure(figsize=(8, 6))
+    y = [temp[i][1] for i in range(len(temp))]
+    plt.scatter([temp[i][0] for i in range(len(temp))], [temp[i][2] for i in range(len(temp))], c=y, cmap='viridis',
+                s=20, edgecolors='grey')
+    plt.xlabel('Długość klucza')
+    plt.ylabel('Czas')
+    cbar = plt.colorbar()
+    # Add description to colorbar
+    cbar.set_label('Accuracy in %', rotation=270, labelpad=20)
+    # Set the range of the colorbar from 0 to 100
+    plt.savefig('xor_from_1_to_7_yes_random.png')
+    plt.show()
+
     temp = analise.mierzenie_czas_dlugosc_klucza("v", 1, 7, True)
+    plt.figure()
+    plt.figure(figsize=(8, 6))
+    y = [temp[i][1] for i in range(len(temp))]
+    plt.scatter([temp[i][0] for i in range(len(temp))], [temp[i][2] for i in range(len(temp))], c=y, cmap='viridis',
+                s=20, edgecolors='grey')
+    plt.xlabel('Długość klucza')
+    plt.ylabel('Czas')
+    cbar = plt.colorbar()
+    # Add description to colorbar
+    cbar.set_label('Accuracy in %', rotation=270, labelpad=20)
+    # Set the range of the colorbar from 0 to 100
+    plt.savefig('veginere_from_1_to_7_yes_random.png')
+    plt.show()
+
     print(temp)
     print("\nStepik zadanie: ")
     print(analise.interface_veginere("qwzv" + "ssui ", 4))
