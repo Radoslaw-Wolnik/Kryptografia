@@ -146,7 +146,7 @@ if __name__ == '__main__':
     print(new_ans2)
     print()
 
-    # kryptoanaliza xor
+    # kryptoanaliza xor TESTING DATA
     xor_ansv_11 = "dad"
     xor_eg_11 = "\x0f\x14\x0c"
     xor_ansv_12 = "mom"
@@ -159,6 +159,17 @@ if __name__ == '__main__':
     xor_eg_32 = "\x0em\x01n"
     xor_key_30 = "o\no\x07"
 
+    K = ['P', 'TA', 'POE', 'PERI', 'MARCI', 'VOTESB']
+    A = ['E', 'IC', 'SUB', 'MERR', 'BAUXI', 'IMMERS']
+    cipheredA = ['\\x15', '\\x1d\\x02', '\\x03\\x1a\\x07', '\\x1d\\x00\\x00\\x1b', '\\x0f\\x00\\x07\\x1b\\x00', '\\x1f\\x02\\x19\\x00\\x01\\x11']
+    B = ['A', 'CO', 'CHA', 'ASYM', 'MACRO', 'BUSBOY']
+    cipheredB = ['\\x11', '\\x17\\x0e', '\\x13\\x07\\x04', '\\x11\\x16\\x0b\\x04', '\\x00\\x00\\x11\\x11\\x06', '\\x14\\x1a\\x07\\x07\\x1c\\x1b']
+
+    Krand = ['\\xe7', '\\xf2\\x89', '\\x84\\x94_', '6~\\x8a\\x82', 'j\\x05\\x12Pz', '\\xb9\\xf0\\xf6\\x91\\xd5t']
+    Arand = ['S', 'CH', 'SWE', 'LATC', 'DISAG', 'MALLAR']
+    Brand = ['T', 'RO', 'SPH', 'PARO', 'EXTIN', 'KNAPPA']
+    ArandCiphered = ['\\xb4', '\\xb1\\xc1', '\\xd7\\xc3\\x1a', 'z?\\xde\\xc1', '.LA\\x11=', '\\xf4\\xb1\\xba\\xdd\\x94&']
+    BrandCiphered = ['\\xb3', '\\xa0\\xc6', '\\xd7\\xc4\\x17', 'f?\\xd8\\xcd', '/]F\\x194', '\\xf2\\xbe\\xb7\\xc1\\x855']
     # xored = xor_two_str(xor_ansv_11, xor_key_10)
     # result = dec_to_str(xored)
     # print("".join(result))
@@ -170,68 +181,39 @@ if __name__ == '__main__':
     # print(xor_ansv_12)
     print()
 
+    # TESTING
+    #for i in range(len(A)):
+    #    xor_possible_key = analise.interface_xor(cipheredA[i] + cipheredB[i], len(A[i]))
+    #    print(f'possible key: {xor_possible_key[0]} scored: {xor_possible_key[1]} in time: {xor_possible_key[2]}')
+
     print("Plotting")
     temp = analise.mierzenie_czas_dlugosc_klucza("x", 1, 7, False)
+    print("Kryptoanaliza Xor zakończona klucze z słow")
     print(temp)
-    plt.figure()
-    plt.figure(figsize=(8, 6))
-    y = [temp[i][1] for i in range(len(temp))]
-    plt.scatter([temp[i][0] for i in range(len(temp))], [temp[i][2] for i in range(len(temp))], c=y, cmap='viridis', s=20, edgecolors='grey')
-    plt.xlabel('Długość klucza')
-    plt.ylabel('Czas')
-    cbar = plt.colorbar()
-    # Add description to colorbar
-    cbar.set_label('Accuracy in %', rotation=270, labelpad=20)
-    # Set the range of the colorbar from 0 to 100
-    plt.savefig('xor_from_1_to_7_not_random.png')
-    plt.show()
+    analise.make_plot(temp,
+                      "Kryptoanaliza czasu w zaleznosci od dlugosci klucza dla\n XOR z kluczami z słów",
+                      "XOR_1_7_WordsKey")
 
     temp = analise.mierzenie_czas_dlugosc_klucza("v", 1, 7, False)
-    plt.figure()
-    plt.figure(figsize=(8, 6))
-    y = [temp[i][1] for i in range(len(temp))]
-    plt.scatter([temp[i][0] for i in range(len(temp))], [temp[i][2] for i in range(len(temp))], c=y, cmap='viridis',
-                s=20, edgecolors='grey')
-    plt.xlabel('Długość klucza')
-    plt.ylabel('Czas')
-    cbar = plt.colorbar()
-    # Add description to colorbar
-    cbar.set_label('Accuracy in %', rotation=270, labelpad=20)
-    # Set the range of the colorbar from 0 to 100
-    plt.savefig('veginere_from_1_to_7_not_random.png')
-    plt.show()
+    print("Kryptoanaliza veginere zakończona klucze z słow")
+    print(temp)
+    analise.make_plot(temp,
+                      "Kryptoanaliza czasu w zaleznosci od dlugosci klucza dla\n VEGINERE z kluczami z słów",
+                      "VEGINERE_1_7_WordsKey")
 
     temp = analise.mierzenie_czas_dlugosc_klucza("x", 1, 7, True)
-    plt.figure()
-    plt.figure(figsize=(8, 6))
-    y = [temp[i][1] for i in range(len(temp))]
-    plt.scatter([temp[i][0] for i in range(len(temp))], [temp[i][2] for i in range(len(temp))], c=y, cmap='viridis',
-                s=20, edgecolors='grey')
-    plt.xlabel('Długość klucza')
-    plt.ylabel('Czas')
-    cbar = plt.colorbar()
-    # Add description to colorbar
-    cbar.set_label('Accuracy in %', rotation=270, labelpad=20)
-    # Set the range of the colorbar from 0 to 100
-    plt.savefig('xor_from_1_to_7_yes_random.png')
-    plt.show()
+    print("Kryptoanaliza xor random=True zakonczona")
+    print(temp)
+    analise.make_plot(temp, "Kryptoanaliza czasu w zaleznosci od dlugosci klucza dla\n XOR z randomowo wygenerowanymi kluczami", "XOR_1_7_RandKey")
 
     temp = analise.mierzenie_czas_dlugosc_klucza("v", 1, 7, True)
-    plt.figure()
-    plt.figure(figsize=(8, 6))
-    y = [temp[i][1] for i in range(len(temp))]
-    plt.scatter([temp[i][0] for i in range(len(temp))], [temp[i][2] for i in range(len(temp))], c=y, cmap='viridis',
-                s=20, edgecolors='grey')
-    plt.xlabel('Długość klucza')
-    plt.ylabel('Czas')
-    cbar = plt.colorbar()
-    # Add description to colorbar
-    cbar.set_label('Accuracy in %', rotation=270, labelpad=20)
-    # Set the range of the colorbar from 0 to 100
-    plt.savefig('veginere_from_1_to_7_yes_random.png')
-    plt.show()
-
+    print("kryptoanaliza Veginere random true zakończona")
     print(temp)
+    analise.make_plot(temp,
+                      "Kryptoanaliza czasu w zaleznosci od dlugosci klucza dla\n VEGINERE z randomowo wygenerowanymi kluczami",
+                      "VEGINERE_1_7_RandKey")
+
+
     print("\nStepik zadanie: ")
     print(analise.interface_veginere("qwzv" + "ssui ", 4))
     print(analise.interface_veginere("rcgwpv" + "hibppp", 6))
