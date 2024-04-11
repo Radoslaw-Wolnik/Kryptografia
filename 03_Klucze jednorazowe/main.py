@@ -1,9 +1,4 @@
 from Kryptoanaliza import Kryptoanaliza
-import matplotlib.pyplot as plt
-# TODO:
-#  dodaj przy użyciu operacji XOR.
-#  W tej części zadania należy samodzielnie przygotować zestaw danych testowych i przedstawić je prowadzącemu.
-
 def xor(a, b):
     return a ^ b
 
