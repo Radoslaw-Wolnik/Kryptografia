@@ -429,12 +429,15 @@ class Kryptoanaliza:
                 for i in range(from_len, to_len, 1):
                     temp = self.generate_rand_key(i, seed + i)
                     K.append("".join(temp))
+                # change to string <------------------------------ i think that was the problem # nope 
+                # K = self.decimal_to_str(K)
             if szyfrowanie == "v":
                 for i in range(from_len, to_len, 1):
                     temp = []
                     for j in range(i):
                         temp.append(random.choice(AZ))
                     K.append("".join(temp))
+                    
         else:
             # klucze zlozone z slow z slownika angielskiego
             for i in range(from_len, to_len, 1):
