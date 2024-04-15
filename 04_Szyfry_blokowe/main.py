@@ -1,6 +1,6 @@
 import subprocess
 from pathlib import Path
-from block_cipher import mini_des_CBC, mini_des_ECB
+from block_cipher import mini_des_CBC, mini_des_ECB, mini_des_OFB, mini_des_CTR
 from file_menager import *
 
 
@@ -8,26 +8,33 @@ def process_and_write_pbm(input_file, output_file):
     header, size, bits = read_pbm(input_file)
     cipher_bits = mini_des_ECB(bits, "10101010", (0, 1, 3, 2, 3, 2, 4, 5),
                                "101 010 001 110 011 100 111 000 001 100 110 010 000 111 101 011",
-                               "100 000 110 101 111 001 011 010 101 011 000 111 110 010 001 100", 8) # (0, 4, 3, 2, 3, 5, 4, 1), (0, 1, 3, 2, 3, 2, 4, 5),
+                               "100 000 110 101 111 001 011 010 101 011 000 111 110 010 001 100",
+                               8)  # (0, 4, 3, 2, 3, 5, 4, 1), (0, 1, 3, 2, 3, 2, 4, 5),
     write_pbm(header, size, cipher_bits, output_file)
 
 
-def print_pbm(filePath):
-    root_folder = Path(__file__).parents[1]
-    file_path = root_folder / filePath
+def process_and_write_img(input_file, output_file):
+    bits, size = image_to_bits(input_file)
+    cipher_bits = mini_des_CBC(bits, "10101010", (0, 1, 3, 2, 3, 2, 4, 5),
+                               "101 010 001 110 011 100 111 000 001 100 110 010 000 111 101 011",
+                               "100 000 110 101 111 001 011 010 101 011 000 111 110 010 001 100", 8, "111011010010")
+    bits_to_image(cipher_bits, size, output_file)
 
-    # Define the PowerShell command to run the script with the file name as an argument
-    ps_command = "powershell -ExecutionPolicy Unrestricted -File print.ps1 " + str(file_path)
-    # Execute the PowerShell command using subprocess.run
-    # subprocess.run(ps_command)
-    result = subprocess.run(ps_command, capture_output=True, text=True)
-    # Check if the command was successful
-    if result.returncode == 0:
-        # Print the output with proper formatting
-        print(result.stdout)
-    else:
-        # Print any errors
-        print("Error:", result.stderr)
+
+def process_and_write_img_OFB(input_file, output_file):
+    bits, size = image_to_bits(input_file)
+    cipher_bits = mini_des_OFB(bits, "10101010", (0, 1, 3, 2, 3, 2, 4, 5),
+                               "101 010 001 110 011 100 111 000 001 100 110 010 000 111 101 011",
+                               "100 000 110 101 111 001 011 010 101 011 000 111 110 010 001 100", 8, "111011010010")
+    bits_to_image(cipher_bits, size, output_file)
+
+
+def process_and_write_img_CTR(input_file, output_file):
+    bits, size = image_to_bits(input_file)
+    cipher_bits = mini_des_CTR(bits, "10101010", (0, 1, 3, 2, 3, 2, 4, 5),
+                               "101 010 001 110 011 100 111 000 001 100 110 010 000 111 101 011",
+                               "100 000 110 101 111 001 011 010 101 011 000 111 110 010 001 100", 8, 127612213)
+    bits_to_image(cipher_bits, size, output_file)
 
 
 if __name__ == '__main__':
@@ -56,6 +63,9 @@ if __name__ == '__main__':
     print(mini_des_ECB(text2, key, permutation_pattern, sbox1, sbox2, rounds))
 
     process_and_write_pbm("resources/washington.pbm", "out/first.pbm")
+    process_and_write_img("resources/washington.png", "out/scnd.png")
+    process_and_write_img_OFB("resources/washington.png", "out/third.png")
+    process_and_write_img_CTR("resources/washington.png", "out/fourth.png")
 
     # outfileName = "first"
     # root_folder = Path(__file__).parents[0]
@@ -87,5 +97,3 @@ if __name__ == '__main__':
     # print(param.decode('utf-8'))
     # print(size)
     # print(bits[5500:6000])
-
-

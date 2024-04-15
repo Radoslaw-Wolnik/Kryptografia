@@ -47,14 +47,9 @@ def image_to_bits(image_path):
         # Convert image data to binary string
         binary_data = ''.join(format(pixel, '08b') for pixel in img.tobytes())
 
-    return binary_data
-
-
-def process_bits(bits):
-    # Your logic to process the bits here
-    # For example, if you want to invert each bit:
-    processed_bits = ''.join(str(1 - int(bit)) for bit in bits)
-    return processed_bits
+        # size
+        size = img.size
+    return binary_data, size
 
 
 def bits_to_image(bits, image_size, output_path):
