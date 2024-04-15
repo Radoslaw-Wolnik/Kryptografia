@@ -1,3 +1,4 @@
+# good site http://www.crypto-it.net/pl/teoria/tryby-szyfrow-blokowych.html
 def iKey(key, position):
     if position >= len(key):
         position = position % len(key)
@@ -78,8 +79,9 @@ def mini_des_ECB(text, key, permutation_pattern, sbox1, sbox2, rounds):
 
 
 def mini_des_CBC(text, key, permutation_pattern, sbox1, sbox2, rounds, IV):
-    # slice text to blocks of 12 bits
-    # if the lenght of text is eg 15 then we have on block of 12 and we dont care about the 3 bits that were left (obcinamy)
+    # text jawny xor wektor początkowy (IV)
+    # wynik szyfrujemy z kluczem
+    # zaszyfrowany blok jest wynikiem i przekzujemy go do następnego kroku jako wektor początkowy
     twelve_bits_blocks = []
     for i in range(0, len(text) - 11, 12):
         twelve_bits_blocks.append(text[i:i + 12])
@@ -87,15 +89,71 @@ def mini_des_CBC(text, key, permutation_pattern, sbox1, sbox2, rounds, IV):
     res = []
     assert len(
         IV) == 12, f'Lenght of initial IV must correspond to lenght of block: 12\nGiven IV:{IV} of lenght:{len(IV)}'
-    pre_xor = IV
+    vector = IV
     for block in twelve_bits_blocks:
         # in this shema block = m1, res[-1] = c1 .. c[i], IV is the first c0
         # < print(current block: {block}, current pre_xor: {pre_xor}')
-        xored = ['1' if block[i] != pre_xor[i] else '0'
+        xored = ['1' if block[i] != vector[i] else '0'
                  for i in range(len(block))]
         xored = "".join(xored)
         # < print(result of xor: {xored}')
-        res.append(bit_block_size_12(xored, key, permutation_pattern, sbox1, sbox2, rounds))
-        pre_xor = res[-1]
+        ciphered_block = bit_block_size_12(xored, key, permutation_pattern, sbox1, sbox2, rounds)
+        res.append(ciphered_block)
+        vector = ciphered_block
+    # put together
+    return "".join(res)
+
+def mini_des_OFB(text, key, permutation_pattern, sbox1, sbox2, rounds, IV):
+    # wektor inicjujący (IV) + klucz zostaje zaszyfrowany
+    # wynik przekazujemy jako wektor do kolejnego kroku
+    # wynik xor text jawny jako resulting block
+    twelve_bits_blocks = []
+    for i in range(0, len(text) - 11, 12):
+        twelve_bits_blocks.append(text[i:i + 12])
+    # feed them to bit_block_size_12()
+    res = []
+    assert len(
+        IV) == 12, f'Lenght of initial IV must correspond to lenght of block: 12\nGiven IV:{IV} of lenght:{len(IV)}'
+    vector = IV
+    for block in twelve_bits_blocks:
+        # < print(current block: {block}, current pre_xor: {pre_xor}')
+        ciphered_vector = bit_block_size_12(vector, key, permutation_pattern, sbox1, sbox2, rounds)
+        xored = ['1' if block[i] != ciphered_vector[i] else '0'
+                 for i in range(len(block))]
+        xored = "".join(xored)
+
+        vector = ciphered_vector
+        res.append(xored)
+    # put together
+    return "".join(res)
+
+
+def mini_des_CTR(text, key, permutation_pattern, sbox1, sbox2, rounds, nonce):
+    # nonce (nonce oznacza unikalny numer: number used once)
+    # nonce + licznik szyfrowanie z kluczem
+    # wynik xorujemy z tekstem jawnym
+    # zwiększamy licznik o 1
+
+    twelve_bits_blocks = []
+    for i in range(0, len(text) - 11, 12):
+        twelve_bits_blocks.append(text[i:i + 12])
+    # feed them to bit_block_size_12()
+    res = []
+    assert type(nonce) == int, f'The nonce parameter must be an integer; given type:{type(nonce)}'
+    for idx, block in enumerate(twelve_bits_blocks):
+        # < print(current block: {block}, current pre_xor: {pre_xor}')
+        vector = bin(nonce + idx)[2:]
+        if len(vector) > 12:
+            vector = vector[-12:]
+        elif len(vector) < 12:
+            vector = format((nonce + idx), '012b')
+
+        ciphered_vector = bit_block_size_12(vector, key, permutation_pattern, sbox1, sbox2, rounds)
+        xored = ['1' if block[i] != ciphered_vector[i] else '0'
+                 for i in range(len(block))]
+        xored = "".join(xored)
+
+        vector = ciphered_vector
+        res.append(xored)
     # put together
     return "".join(res)
