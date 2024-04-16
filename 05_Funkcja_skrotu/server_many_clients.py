@@ -1,10 +1,7 @@
-# możliwość dodania użytkownika
-# przechowuje bazę danych funkcji skrótu
-# gdy server otrzymuje próbę logowania porównuje przesłany skrót do tego z bazy danych
-
 import socket
 import hashlib
 import pandas as pd
+import os.path
 
 # Constants
 DATABASE_FILENAME = "user_credentials.xlsx"
@@ -31,6 +28,16 @@ def register_user(username, password):
     df = df.append({"Username": username, "Password": hashlib.sha256(password.encode()).hexdigest()}, ignore_index=True)
     df.to_excel(DATABASE_FILENAME, index=False)
     return "Registration successful."
+
+def change_password(username, old_password, new_password):
+    df = pd.read_excel(DATABASE_FILENAME)
+    if not df.empty:
+        user = df[df["Username"] == username]
+        if not user.empty and user.iloc[0]["Password"] == hashlib.sha256(old_password.encode()).hexdigest():
+            df.loc[df["Username"] == username, "Password"] = hashlib.sha256(new_password.encode()).hexdigest()
+            df.to_excel(DATABASE_FILENAME, index=False)
+            return "Password changed successfully."
+    return "Failed to change password. Invalid username or old password."
 
 # Main server code
 if __name__ == "__main__":
