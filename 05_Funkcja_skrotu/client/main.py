@@ -16,7 +16,7 @@ def login(username, password):
 
             # Send username and encrypted password to the server
             message = f"LOGIN|{username}|{encrypted_password}"
-            client_socket.sendall(message.encode())
+            client_socket.send(message.encode())
 
             # Receive response from the server
             response = client_socket.recv(1024).decode()
@@ -37,7 +37,7 @@ def register(username, password):
 
             # Send username and encrypted password to the server
             message = f"REGISTER|{username}|{encrypted_password}"
-            client_socket.sendall(message.encode())
+            client_socket.send(message.encode())
 
             # Receive response from the server
             response = client_socket.recv(1024).decode()

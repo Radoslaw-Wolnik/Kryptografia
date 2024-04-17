@@ -1,43 +1,53 @@
+# możliwość dodania użytkownika
+# przechowuje bazę danych funkcji skrótu
+# gdy server otrzymuje próbę logowania porównuje przesłany skrót do tego z bazy danych
+
+# import hashlib
 import socket
-import hashlib
 import pandas as pd
 import os.path
 
 # Constants
-DATABASE_FILENAME = "user_credentials.xlsx"
+DATABASE_FILENAME = "user_credentials.csv"
 SERVER_HOST = 'localhost'
 SERVER_PORT = 12345
+
 
 def generate_database():
     if not os.path.isfile(DATABASE_FILENAME):
         df = pd.DataFrame(columns=["Username", "Password"])
-        df.to_excel(DATABASE_FILENAME, index=False)
+        df.to_csv(DATABASE_FILENAME, index=False)
 
-def check_credentials(username, password):
-    df = pd.read_excel(DATABASE_FILENAME)
+
+def check_credentials(username, encrypted_password):
+    df = pd.read_csv(DATABASE_FILENAME)
     if not df.empty:
         user = df[df["Username"] == username]
-        if not user.empty and user.iloc[0]["Password"] == hashlib.sha256(password.encode()).hexdigest():
+        if not user.empty and user.iloc[0]["Password"] == encrypted_password:
             return "Login successful."
     return "Invalid credentials."
 
-def register_user(username, password):
-    df = pd.read_excel(DATABASE_FILENAME)
+
+def register_user(username, encrypted_password):
+    df = pd.read_csv(DATABASE_FILENAME)
     if not df.empty and username in df["Username"].values:
         return "Username already exists."
-    df = df.append({"Username": username, "Password": hashlib.sha256(password.encode()).hexdigest()}, ignore_index=True)
-    df.to_excel(DATABASE_FILENAME, index=False)
+    # df = df.append({"Username": username, "Password": encrypted_password}, ignore_index=True)
+    df.loc[len(df)] = [username, encrypted_password]
+    df.to_csv(DATABASE_FILENAME, index=False)
     return "Registration successful."
 
+
 def change_password(username, old_password, new_password):
-    df = pd.read_excel(DATABASE_FILENAME)
+    df = pd.read_csv(DATABASE_FILENAME)
     if not df.empty:
         user = df[df["Username"] == username]
-        if not user.empty and user.iloc[0]["Password"] == hashlib.sha256(old_password.encode()).hexdigest():
-            df.loc[df["Username"] == username, "Password"] = hashlib.sha256(new_password.encode()).hexdigest()
-            df.to_excel(DATABASE_FILENAME, index=False)
+        if not user.empty and user.iloc[0]["Password"] == old_password:
+            df.loc[df["Username"] == username, "Password"] = new_password
+            df.to_csv(DATABASE_FILENAME, index=False)
             return "Password changed successfully."
     return "Failed to change password. Invalid username or old password."
+
 
 # Main server code
 if __name__ == "__main__":

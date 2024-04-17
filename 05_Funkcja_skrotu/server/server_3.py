@@ -5,10 +5,12 @@ import pandas as pd
 # Constants
 DATABASE_FILENAME = "user_credentials.xlsx"
 
+
 def generate_database():
     if not os.path.isfile(DATABASE_FILENAME):
         df = pd.DataFrame(columns=["Username", "Password"])
         df.to_excel(DATABASE_FILENAME, index=False)
+
 
 def check_credentials(username, password):
     df = pd.read_excel(DATABASE_FILENAME)
@@ -18,6 +20,7 @@ def check_credentials(username, password):
             return True
     return False
 
+
 def register_user(username, password):
     df = pd.read_excel(DATABASE_FILENAME)
     if not df.empty and username in df["Username"].values:
@@ -25,6 +28,7 @@ def register_user(username, password):
     df = df.append({"Username": username, "Password": hashlib.sha256(password.encode()).hexdigest()}, ignore_index=True)
     df.to_excel(DATABASE_FILENAME, index=False)
     return True
+
 
 # Server setup
 def start_server():
@@ -68,6 +72,7 @@ def start_server():
 
         finally:
             client_socket.close()
+
 
 # Main server code
 if __name__ == "__main__":

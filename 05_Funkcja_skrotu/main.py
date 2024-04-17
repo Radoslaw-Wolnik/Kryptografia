@@ -17,5 +17,6 @@ if __name__ == '__main__':
     # server
     # client
 
-
-
+# problem with pyCharm clipboard not synchronising with windows one
+# https://stackoverflow.com/questions/31284260/how-to-sync-intellij-idea-clipboard-with-the-windows-clipboard
+# Did not expect that can happen
