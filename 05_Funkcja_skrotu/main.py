@@ -17,6 +17,7 @@ if __name__ == '__main__':
     # Kasia : Kasia
     df = pd.read_csv("server/user_credentials.csv")
     if not df.empty:
+
         # Understanding dataframe contest
         # All columns in our csv file
         print(df.columns)
