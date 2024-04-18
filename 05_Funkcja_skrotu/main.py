@@ -3,7 +3,8 @@
 # 2.
 #    Przeprowadź testy uwierzytelniania, demonstrując, że prawidłowe hasła pozwalają na dostęp,
 #    a nieprawidłowe są odrzucane. Wykaż, że serwer nie jest w stanie odtworzyć oryginalnego hasła z jego skrótu.
-#
+
+import pandas as pd
 
 if __name__ == '__main__':
     print("Funkcje skrotu")
@@ -14,6 +15,17 @@ if __name__ == '__main__':
     # Radek : Radek
     # Julia : Amelia
     # Kasia : Kasia
+    df = pd.read_csv("server/user_credentials.csv")
+    if not df.empty:
+        # Understanding dataframe contest
+        # All columns in our csv file
+        print(df.columns)
+        # First 3 entries
+        print(df.head(3))
+        # Entire first - 0 row
+        print(df.iloc[0])
+
+
 
 # Podpunkt 2.
 # jak przeprowadzić testy uwierzytelniania? Zrobiłem to by zobaczyć czy działa i działa

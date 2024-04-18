@@ -3,7 +3,6 @@
 
 import socket
 import hashlib
-import os
 import secrets
 
 
