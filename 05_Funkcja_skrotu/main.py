@@ -7,6 +7,8 @@ from openpyxl.workbook import Workbook
 
 
 def dictionary_attack_hash(hash, salt, english_dictionary):
+    # because of usage of salt rainbow tables are useless
+    # rainbow tables - tables of precomputed hashes for many many words
     ciphered = hash
     mdC = hashlib.md5(ciphered.encode('utf-8'))  # here add salt if salted
     binC = bin(int.from_bytes(mdC.digest(), byteorder='big'))[2:]
