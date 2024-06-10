@@ -1,0 +1,1 @@
+# to samo co z RSA ale using ElGamals alghoritm
