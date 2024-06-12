@@ -128,7 +128,7 @@ class RSA:
         byte_arrays = [int2bytes(num, size_bit_array) for num in res]
         # concatynate and change to utf-8
         byte_string = b''.join(byte_arrays)
-        base64_string = base64.b64encode(byte_string).decode('utf-8')
+        base64_string = b64encode(byte_string).decode('utf-8')
         # save to file
         out_name = out_file if out_file is not None else 'out.txt'
         with open(out_name, 'w') as out:
@@ -146,7 +146,7 @@ class RSA:
             with open(file, 'r') as file_text:
                 base64_string = file_text
         # change from base64 to bytearrays to list of numbers (int)
-        byte_string = base64.b64decode(base64_string)
+        byte_string = b64decode(base64_string)
         mod = self.q * self.p
         size_bit_array = (mod.bit_length() + 7) // 8
         byte_arrays = [byte_string[i:i + size_bit_array] for i in range(0, len(byte_string), size_bit_array)]
