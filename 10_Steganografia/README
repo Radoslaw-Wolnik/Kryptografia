@@ -1,1 +1,56 @@
-d,asdjfvb
+Szyfrowanie czas dla pliku res/1Mb.jpeg
+message lenght: 1 time: 4.821054935455322
+message lenght: 12 time: 4.771795272827148
+message lenght: 29 time: 4.796658515930176
+message lenght: 56 time: 4.807119131088257
+message lenght: 86 time: 4.774134874343872
+
+Szyfrowanie czas dla pliku res/10Mb.jpg
+message lenght: 1 time: 12.379214525222778
+message lenght: 12 time: 12.31137728691101
+message lenght: 29 time: 12.333841800689697
+message lenght: 56 time: 12.288941621780396
+message lenght: 86 time: 12.31157898902893
+
+Deszyfrowanie czas dla pliku res/100kB.jpg
+message lenght: 1 time: 0.02199864387512207
+message lenght: 12 time: 0.023005962371826172
+message lenght: 29 time: 0.02350759506225586
+message lenght: 56 time: 0.02299666404724121
+message lenght: 86 time: 0.02407240867614746
+
+Deszyfrowanie czas dla pliku res/1Mb.jpeg
+message lenght: 1 time: 0.44026947021484375
+message lenght: 12 time: 0.4302244186401367
+message lenght: 29 time: 0.4312138557434082
+message lenght: 56 time: 0.4367637634277344
+message lenght: 86 time: 0.42822980880737305
+
+Deszyfrowanie czas dla pliku res/10Mb.jpg
+message lenght: 1 time: 0.7340400218963623
+message lenght: 12 time: 0.7387838363647461
+message lenght: 29 time: 0.7402489185333252
+message lenght: 56 time: 0.7366654872894287
+message lenght: 86 time: 0.7388715744018555
+
+Zmiana wielkości dla pliku res/100kB.jpg
+message lenght: 1 zmiana wielkości: 0.02199864387512207
+message lenght: 12 zmiana wielkości: 0.023005962371826172
+message lenght: 29 zmiana wielkości: 0.02350759506225586
+message lenght: 56 zmiana wielkości: 0.02299666404724121
+message lenght: 86 zmiana wielkości: 0.02407240867614746
+
+Zmiana wielkości dla pliku res/1Mb.jpeg
+message lenght: 1 zmiana wielkości: 0.44026947021484375
+message lenght: 12 zmiana wielkości: 0.4302244186401367
+message lenght: 29 zmiana wielkości: 0.4312138557434082
+message lenght: 56 zmiana wielkości: 0.4367637634277344
+message lenght: 86 zmiana wielkości: 0.42822980880737305
+
+Zmiana wielkości dla pliku res/10Mb.jpg
+message lenght: 1 zmiana wielkości: 0.7340400218963623
+message lenght: 12 zmiana wielkości: 0.7387838363647461
+message lenght: 29 zmiana wielkości: 0.7402489185333252
+message lenght: 56 zmiana wielkości: 0.7366654872894287
+message lenght: 86 zmiana wielkości: 0.7388715744018555
+
