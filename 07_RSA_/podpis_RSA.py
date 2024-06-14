@@ -3,11 +3,6 @@ import hashlib
 import os
 
 class podpis_RSA:
-    # Example usage:
-    # rsa_instance = RSA()  # assuming RSA class is defined elsewhere
-    # signer = podpis_RSA(rsa_instance)
-    # signer.set_file('path/to/file.txt')
-    # signed_data = signer.sign()
 
     def __int__(self, rsa):
         self.file_path = None
@@ -26,7 +21,6 @@ class podpis_RSA:
 
     def sign(self):
         assert self.file_path is not None, "filepath should not be empty"
-        # check if file exsists in given filepath
         # hash the file
         with open(self.file_path, 'rb') as file:
             file_data = file.read()
@@ -35,3 +29,14 @@ class podpis_RSA:
         signed = self._rsa.decode(text=hashed_file)
 
         return signed
+
+    def verify(self, signed):
+        assert self.file_path is not None, "filepath should not be empty"
+        # hash the file in file_path (previously set if diff file)
+        with open(self.file_path, 'rb') as file:
+            file_data = file.read()
+            hashed_file = hashlib.md5(file_data).hexdigest()
+        # decode using public key in RSA
+        decoded_sign = self._rsa.encode(text=signed)
+
+        return decoded_sign == hashed_file
