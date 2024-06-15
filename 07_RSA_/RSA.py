@@ -102,6 +102,13 @@ class RSA:
     def get_private_key(self):
         return (self.private_key, self.p * self.q)
 
+    def sign(self, text):
+        pass
+
+    def verify(self, text, public_key):
+        pass
+
+
     def cipher(self, text=None, file=None, out_file=None, public_key=None):
         res, mod, key = None, None, None
         assert text is None or file is None, "Only one medium at a time, either text to function or file"
